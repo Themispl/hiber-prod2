@@ -65,4 +65,10 @@ public class Course {
                 teacher.getCourses().remove(this);
         }
 
+        @Override
+        public String toString() {
+                return "Course{" +
+                        "id=" + id +
+                        ", title='" + title ;
+        }
 }
