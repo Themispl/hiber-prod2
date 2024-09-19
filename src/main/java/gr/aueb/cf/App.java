@@ -96,25 +96,71 @@ public class App
 //        List<Teacher> teachers = em.createQuery(query).getResultList();
 
         //List of courses and teachers
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
-        Root<Course> course = cq.from(Course.class);
-        Join<Course, Teacher> teacherJoin = course.join("teachers");
-        cq.multiselect(course.get("title"), teacherJoin.get("lastname"), teacherJoin.get("firstname"));
-        List<Object[]> listCoursesTeachers = em.createQuery(cq).getResultList();
+//        CriteriaBuilder cb = em.getCriteriaBuilder();
+//        CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+//        Root<Course> course = cq.from(Course.class);
+//        Join<Course, Teacher> teacherJoin = course.join("teachers");
+//        cq.multiselect(course.get("title"), teacherJoin.get("lastname"), teacherJoin.get("firstname"));
+//        List<Object[]> listCoursesTeachers = em.createQuery(cq).getResultList();
 
+        // 6 List of teachers who dont have courses
+//        CriteriaBuilder cb = em.getCriteriaBuilder();
+//        CriteriaQuery<Teacher> query = cb.createQuery(Teacher.class);
+//        Root<Teacher> teacherRoot = query.from(Teacher.class);
+//        query.select(teacherRoot).where(cb.isEmpty(teacherRoot.get("courses")));
+//        List<Teacher> teachers = em.createQuery(query).getResultList();
+
+
+        //7 List teachers with course count
+//        CriteriaBuilder cb = em.getCriteriaBuilder();
+//        CriteriaQuery<Object[]> query = cb.createQuery(Object[].class);
+//        Root<Teacher> teacherRoot = query.from(Teacher.class);
+//        Join<Teacher, Course> courseJoin = teacherRoot.join("courses", JoinType.LEFT);
+//        query.multiselect(teacherRoot, cb.count(courseJoin)).groupBy(teacherRoot);
+//        List<Object[]> list = em.createQuery(query).getResultList();
+
+//        8 //find teachers with SQL
+//        CriteriaBuilder cb = em.getCriteriaBuilder();
+//        CriteriaQuery<Teacher> query = cb.createQuery(Teacher.class);
+//        Root<Teacher> courseRoot = query.from(Teacher.class);
+//        ParameterExpression<String> courseParam = cb.parameter(String.class, "courseName");
+//        query.select(courseRoot).where(cb.equal(courseRoot.get("courses").get("title"), courseParam));
+//        List<Teacher> coursesSQL = em.createQuery(query).setParameter("courseName", "SQL").getResultList();
+
+   //9     //Find teachers with firstaname and more than one query
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Teacher> query = cb.createQuery(Teacher.class);
+        Root<Teacher> teacherRoot = query.from(Teacher.class);
+        ParameterExpression<String> val = cb.parameter(String.class, "lastname");
+        query.select(teacherRoot).where(cb.like(teacherRoot.get("lastname"), val), cb.gt(cb.size(teacherRoot.get("courses")), 1));
+        List<Teacher> teachersLastname = em.createQuery(query).setParameter("lastname", "Α%").getResultList();
 
 
 
         em.getTransaction().commit();
 
 
-        for(Object[] row:listCoursesTeachers){
-            for(Object item: row){
-                System.out.println(item + " ");
-            }
-            System.out.println();
-        }
+        teachersLastname.forEach(System.out::println);
+
+       //8 coursesSQL.forEach(System.out::println);
+
+
+//  7      for(Object[] row:list){
+//            for(Object item: row){
+//                System.out.println(item + " ");
+//            }
+//            System.out.println();
+//        }
+
+
+            //6  teachers.forEach(System.out::println);
+
+//   5     for(Object[] row:listCoursesTeachers){
+//            for(Object item: row){
+//                System.out.println(item + " ");
+//            }
+//            System.out.println();
+//        }
 
 
 
